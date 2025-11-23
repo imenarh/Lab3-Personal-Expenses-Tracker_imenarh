@@ -13,9 +13,10 @@ A command-line application that helps users track their daily expenses, manage t
 - **View Expenses**: Search expenses by item name or amount range
 
 ### Shell Script Features
-- **Archive**: Move expense files to organized directory structure (`expenses/YYYY/MM/`)
-- **Search**: Find and display archived expenses by date
-- **Logging**: All operations logged with timestamps to `archive_log.txt`
+- **Interactive Menu**: Easy-to-use menu for archiving and searching
+- **Auto-Archive**: Automatically moves all `expenses_*.txt` files to `archives/` folder
+- **Search**: Find archived expenses by date
+- **Logging**: Operations logged to `archive_log.txt`
 
 ## Usage
 
@@ -34,22 +35,21 @@ python3 expenses-tracker.py
 ```
 
 **Main Menu Options**:
-1. **Check Remaining Balance** - View financial summary and add money
-2. **View Expenses** - Search and view expense records
-3. **Add New Expense** - Record a new expense
-4. **Exit** - Save and quit
+1. **Check Remaining Balance**
+2. **View Expenses**
+3. **Add New Expense**
+4. **Exit**
 
 ### Using the Archive Script
 
-**Archive an expense file**:
+Run the script and follow the on-screen prompts:
+
 ```bash
-./expense_report.sh archive 2025-11-07
+./expense_report.sh
 ```
 
-**Search archived expenses**:
-```bash
-./expense_report.sh search 2025-11-07
-```
-
+**Options:**
+1. **Archive**: Moves all current `expenses_*.txt` files to the `archives/` folder.
+2. **Search**: Asks for a date and shows any matching archived records.
 
 **Enjoy Expense Tracking!**

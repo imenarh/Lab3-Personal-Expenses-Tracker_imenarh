@@ -1,63 +1,67 @@
-#!/bin/bash
+#!/usr/bin/env bash
+DATA_DIR="./"
+ARCHIVE_DIR="$DATA_DIR/archives"
+LOG_FILE="$DATA_DIR/archive_log.txt"
 
-if [ "$1" = "archive" ]; then
-    date=$2
-    filename="expenses_${date}.txt"
-    
-    if ! [[ $date =~ ^[0-9]{4}-[0-9]{2}-[0-9]{2}$ ]]; then
-        echo "Error: Invalid date format. Use YYYY-MM-DD"
-        exit 1
-    fi
-    
-    if [ ! -f "$filename" ]; then
-        echo "Error: File '$filename' not found"
-        exit 1
-    fi
-    
-    year=$(echo $date | cut -d'-' -f1)
-    month=$(echo $date | cut -d'-' -f2)
-    archive_path="expenses/${year}/${month}"
-    
-    mkdir -p "$archive_path"
-    mv "$filename" "$archive_path/"
-    
-    echo "Successfully archived '$filename' to '$archive_path/'"
-    echo "[$(date '+%Y-%m-%d %H:%M:%S')] ARCHIVED: $filename to $archive_path/" >> archive_log.txt
+mkdir -p "$ARCHIVE_DIR"
 
-elif [ "$1" = "search" ]; then
-    date=$2
-    filename="expenses_${date}.txt"
-    
-    if ! [[ $date =~ ^[0-9]{4}-[0-9]{2}-[0-9]{2}$ ]]; then
-        echo "Error: Invalid date format. Use YYYY-MM-DD"
-        exit 1
-    fi
-    
-    year=$(echo $date | cut -d'-' -f1)
-    month=$(echo $date | cut -d'-' -f2)
-    archive_path="expenses/${year}/${month}/${filename}"
-    
-    if [ ! -f "$archive_path" ]; then
-        echo "Error: Archived file not found for date $date"
-        exit 1
-    fi
-    
-    echo "ARCHIVED EXPENSES FOR: $date"
-    echo "--------------------------------------------------------------------------------"
-    while IFS='|' read -r id date time item amount; do
-        printf "%-5s | %-10s | %-8s | %-30s | \$%.2f\n" "$id" "$date" "$time" "$item" "$amount"
-    done < "$archive_path"
-    echo "--------------------------------------------------------------------------------"
-    
-    total=$(awk -F'|' '{sum += $5} END {printf "%.2f", sum}' "$archive_path")
-    echo "Total: \$$total"
-    
-    echo "[$(date '+%Y-%m-%d %H:%M:%S')] SEARCHED: $archive_path" >> archive_log.txt
+timestamp() { date +"%Y%m%d-%H%M%S"; }
 
-else
-    echo "Usage: $0 [archive|search] DATE"
-    echo "Examples:"
-    echo "  $0 archive 2025-11-07"
-    echo "  $0 search 2025-11-07"
-    exit 1
+echo ''
+echo "Expense Report Manager"
+echo ''
+echo "1) Archive all expense files"
+echo "2) Search archives by date"
+echo ''
+read -p "Select an option [1-2]: " choice
+
+if [ "$choice" = "1" ]; then
+  count=0
+  for file in "$DATA_DIR"/expenses_*.txt; do
+    [ -e "$file" ] || continue
+    base=$(basename "$file")
+    ts=$(timestamp)
+    new="${base%.txt}-$ts.txt"
+
+    echo "Archiving $base → $new"
+    {
+      echo "Archive Run: $(date)"
+      echo "Original: $base"
+      echo "Archive: $new"
+      cat "$file"
+      echo ''
+    } >> "$LOG_FILE"
+
+    mv "$file" "$ARCHIVE_DIR/$new"
+    ((count++))
+  done
+  
+  if [ "$count" -eq 0 ]; then
+      echo "No expense files found to archive."
+  else
+      echo "Archive complete. Moved $count file(s)."
+  fi
+  exit 0
 fi
+
+if [ "$choice" = "2" ]; then
+  read -p "Enter date to search (YYYY-MM-DD): " date
+  echo
+  found=false
+  for f in "$ARCHIVE_DIR"/*"$date"*; do
+    [ -e "$f" ] || continue
+    echo "Found: $(basename "$f")"
+    cat "$f"
+    echo ''
+    found=true
+  done
+  
+  if [ "$found" = false ]; then
+      echo "No archived records found for $date"
+  fi
+  exit 0
+fi
+
+
+echo "Invalid choice. Exiting."
+exit 1

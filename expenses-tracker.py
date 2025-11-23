@@ -135,13 +135,13 @@ def view_expenses():
             print("-"*70)
         
         elif choice == '2':
-            min_amt = input("\nEnter minimum amount (or press Enter): $").strip()
-            min_amt = float(min_amt) if min_amt else 0.00
-            max_amt = input("Enter maximum amount (or press Enter): $").strip()
-            max_amt = float(max_amt) if max_amt else 999999.00
+            min_amount = input("\nEnter minimum amount (or press Enter): $").strip()
+            min_amount = float(min_amount) if min_amount else 0.00
+            max_amount = input("Enter maximum amount (or press Enter): $").strip()
+            max_amount = float(max_amount) if max_amount else 999999.00
             
             print("\n" + "-"*70)
-            print(f"SEARCH RESULTS FOR: ${min_amt:.2f} - ${max_amt:.2f}")
+            print(f"SEARCH RESULTS FOR: ${min_amount:.2f} - ${max_amount:.2f}")
             print("-"*70)
             
             for filename in sorted(os.listdir('.')):
@@ -150,9 +150,9 @@ def view_expenses():
                         for line in f:
                             parts = line.strip().split('|')
                             if len(parts) == 5:
-                                amt = float(parts[4])
-                                if min_amt <= amt <= max_amt:
-                                    print(f"{parts[0]} | {parts[1]} | {parts[2]} | {parts[3]} | ${amt:.2f}")
+                                amount = float(parts[4])
+                                if min_amount <= amount <= max_amount:
+                                    print(f"{parts[0]} | {parts[1]} | {parts[2]} | {parts[3]} | ${amount:.2f}")
             print("-"*70)
         
         elif choice == '3':

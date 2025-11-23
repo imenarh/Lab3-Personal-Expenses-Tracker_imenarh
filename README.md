@@ -20,7 +20,7 @@ A command-line application that helps users track their daily expenses, manage t
 
 ## Usage
 
-### Clone the Repository
+### 1. Clone the Repository
 
 1. **Clone the repository**:
    ```bash
@@ -28,7 +28,7 @@ A command-line application that helps users track their daily expenses, manage t
    cd Lab3-Personal-Expenses-Tracker_imenarh
    ```
 
-### Running the Python Application
+### 2. Running the Python Application
 
 ```bash
 python3 expenses-tracker.py
@@ -40,7 +40,7 @@ python3 expenses-tracker.py
 3. **Add New Expense**
 4. **Exit**
 
-### Using the Archive Script
+### 3. Using the Archive Script
 
 Run the script and follow the on-screen prompts:
 
